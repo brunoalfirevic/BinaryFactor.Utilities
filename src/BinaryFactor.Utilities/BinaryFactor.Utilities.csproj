@@ -1,9 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
     <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
     <LangVersion>8</LangVersion>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Authors>Bruno Alfirević</Authors>
+    <Description>
+      A general purpose utility and helper library for .NET development
+    </Description>
   </PropertyGroup>
 
 </Project>
