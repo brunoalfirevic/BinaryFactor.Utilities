@@ -11,6 +11,7 @@
       A general purpose utility and helper library for .NET development
     </Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/brunoalfirevic/BinaryFactor.Utilities</PackageProjectUrl>
   </PropertyGroup>
 
 </Project>
