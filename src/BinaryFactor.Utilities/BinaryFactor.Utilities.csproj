@@ -10,6 +10,7 @@
     <Description>
       A general purpose utility and helper library for .NET development
     </Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
 
 </Project>
