@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Bruno Alfirević. All rights reserved.
 // Licensed under the MIT license. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
-
 namespace BinaryFactor.Utilities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+    using System.Text.RegularExpressions;
+
     public static class StringExtensions
     {
         public static string ReplaceAt(this string str, string replacement, int startIndex, int count)

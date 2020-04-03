@@ -1,11 +1,11 @@
 ﻿// Copyright (c) Bruno Alfirević. All rights reserved.
 // Licensed under the MIT license. See license.txt in the project root for license information.
 
-using System;
-using System.Numerics;
-
 namespace BinaryFactor.Utilities
 {
+    using System;
+    using System.Numerics;
+
     public static class ConvertEx
     {
         public static T ChangeType<T>(object value, IFormatProvider formatProvider = null, bool convertDbNullToNull = false)

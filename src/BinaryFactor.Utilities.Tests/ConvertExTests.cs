@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Bruno Alfirević. All rights reserved.
 // Licensed under the MIT license. See license.txt in the project root for license information.
 
-using System.Numerics;
-using Shouldly;
-using BinaryFactor.Utilities;
-
 namespace BinaryFactor.Tests
 {
+    using System.Numerics;
+    using Shouldly;
+    using BinaryFactor.Utilities;
+
     public class ConvertExTests
     {
         public void TestVariousConversions()

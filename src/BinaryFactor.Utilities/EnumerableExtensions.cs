@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Bruno Alfirević. All rights reserved.
 // Licensed under the MIT license. See license.txt in the project root for license information.
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-
 namespace BinaryFactor.Utilities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public static class EnumerableExtensions
     {
         #if NETSTANDARD2_0

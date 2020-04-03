@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Bruno Alfirević. All rights reserved.
 // Licensed under the MIT license. See license.txt in the project root for license information.
 
-using System;
-using System.Collections;
-using System.Collections.Generic;
-
 namespace BinaryFactor.Utilities
 {
+    using System;
+    using System.Collections;
+    using System.Collections.Generic;
+
     public static class LambdaEqualityComparer
     {
         public static LambdaEqualityComparer<T> Create<T>(Func<T, object> compareBySelector, IEqualityComparer<object> comparer = null, bool callSelectorForNullValues = true)
