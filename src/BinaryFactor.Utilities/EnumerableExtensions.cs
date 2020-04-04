@@ -60,6 +60,11 @@ namespace BinaryFactor.Utilities
             return enumerable.GetRange(index, count).JoinBy(separator);
         }
 
+        public static string JoinNonEmpty(this IEnumerable<string> enumerable, string separator)
+        {
+            return enumerable.Where(s => !string.IsNullOrEmpty(s)).JoinBy(separator);
+        }
+
         public static IEnumerable<IList<T>> Batch<T>(this IEnumerable<T> enumerable, int batchSize)
         {
             var batch = new List<T>(batchSize);
