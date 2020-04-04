@@ -8,7 +8,7 @@
   <PropertyGroup>
     <Authors>Bruno Alfirević</Authors>
     <Description>
-      A general purpose utility and helper library for .NET development
+      A general purpose utility and helper library for .NET development.
     </Description>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/brunoalfirevic/BinaryFactor.Utilities</PackageProjectUrl>

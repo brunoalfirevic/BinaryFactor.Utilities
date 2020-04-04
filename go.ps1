@@ -44,6 +44,11 @@ function push-to-nuget {
     exec {dotnet nuget push publish\$nuget_package --source nuget.org}
 }
 
+function unlist-from-nuget {
+    info "Unlisting NuGet package"
+    exec {dotnet nuget delete BinaryFactor.Utilities $($arguments[0]) --non-interactive --source nuget.org}
+}
+
 function go {
     rebuild
     test
@@ -66,6 +71,7 @@ Available commands:
 
     pack-nuget
     push-to-nuget
+    unlist-from-nuget
 "@
     }
 }
