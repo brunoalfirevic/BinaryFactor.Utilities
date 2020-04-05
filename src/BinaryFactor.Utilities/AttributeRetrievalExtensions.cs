@@ -3,11 +3,12 @@
 
 namespace BinaryFactor.Utilities
 {
+    using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
-    public static class CustomAttributeProviderExtensions
+    public static class AttributeRetrievalExtensions
     {
         public static bool HasAttribute<TAttribute>(this ICustomAttributeProvider attributeProvider, bool inherit = false)
             where TAttribute : class
@@ -25,6 +26,28 @@ namespace BinaryFactor.Utilities
             where TAttribute : class
         {
             var attributes = attributeProvider.GetCustomAttributes(inherit);
+
+            return attributes.OfType<TAttribute>().ToList();
+        }
+
+        public static bool HasAttribute<TAttribute>(this Enum value)
+            where TAttribute : class
+        {
+            return value.GetAttribute<TAttribute>() != null;
+        }
+
+        public static TAttribute GetAttribute<TAttribute>(this Enum value)
+            where TAttribute : class
+        {
+            return value.GetAttributes<TAttribute>().FirstOrDefault();
+        }
+
+        public static IList<TAttribute> GetAttributes<TAttribute>(this Enum value)
+            where TAttribute : class
+        {
+            var type = value.GetType();
+            var memberInfo = type.GetMember(value.ToString());
+            var attributes = memberInfo[0].GetCustomAttributes(false);
 
             return attributes.OfType<TAttribute>().ToList();
         }
