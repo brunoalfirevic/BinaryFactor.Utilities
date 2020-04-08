@@ -11,7 +11,7 @@ namespace BinaryFactor.Utilities
     {
         #if NETSTANDARD2_0
         
-        public static HashSet<T> ToHashSet2<T>(this IEnumerable<T> enumerable)
+        public static HashSet<T> ToHashSet<T>(this IEnumerable<T> enumerable)
         {
             return new HashSet<T>(enumerable);
         }
