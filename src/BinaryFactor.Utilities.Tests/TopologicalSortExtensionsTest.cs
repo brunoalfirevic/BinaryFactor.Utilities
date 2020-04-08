@@ -3,8 +3,8 @@
 
 namespace BinaryFactor.Tests
 {
-    using System.Linq;
     using System;
+    using System.Linq;
     using Shouldly;
     using BinaryFactor.Utilities;
     using BinaryFactor.Utilities.Tests.Utilities;
@@ -42,7 +42,7 @@ namespace BinaryFactor.Tests
             {
                 "ab", "bc", "be", "bf", "cd", "cg", "dc", "dh", 
                 "ea", "ef", "fg", "gf", "hd", "hg", "ii", "kl"
-            }.Select(edge => (edge[0], edge[1]));
+            }.Select(s => (s[0], s[1]));
 
             var output = input.TopologicallyConnect(edges);
 
