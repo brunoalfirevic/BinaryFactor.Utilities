@@ -9,14 +9,10 @@ namespace BinaryFactor.Utilities
 
     public static class EnumerableExtensions
     {
-        #if NETSTANDARD2_0
-        
         public static HashSet<T> ToHashSet<T>(this IEnumerable<T> enumerable)
         {
             return new HashSet<T>(enumerable);
         }
-
-        #endif
 
         public static IReadOnlyList<T> ToReadOnlyList<T>(this IEnumerable<T> enumerable)
         {
