@@ -67,5 +67,10 @@ namespace BinaryFactor.Utilities
 
             return result;
         }
+
+        public static string NullifyIfWhitespace(this string str)
+        {
+            return string.IsNullOrWhiteSpace(str) ? null : str;
+        }
     }
 }
