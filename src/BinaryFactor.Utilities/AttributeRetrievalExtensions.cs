@@ -47,9 +47,9 @@ namespace BinaryFactor.Utilities
         public TAttribute[] GetAll<TAttribute>() where TAttribute : class => this.attributeProvider.GetCustomAttributes<TAttribute>(inherit: false);
         public dynamic[] GetAll(string attributeTypeName) => this.attributeProvider.GetCustomAttributes(attributeTypeName, inherit: false);
 
-        public Attribute GetOne(Type attributeType) => GetAll(attributeType).FirstOrDefault();
-        public TAttribute GetOne<TAttribute>() where TAttribute : class => GetAll<TAttribute>().FirstOrDefault();
-        public dynamic GetOne(string attributeTypeName) => GetAll(attributeTypeName).FirstOrDefault();
+        public Attribute Get(Type attributeType) => GetAll(attributeType).FirstOrDefault();
+        public TAttribute Get<TAttribute>() where TAttribute : class => GetAll<TAttribute>().FirstOrDefault();
+        public dynamic Get(string attributeTypeName) => GetAll(attributeTypeName).FirstOrDefault();
 
         public bool Has(Type attributeType) => GetAll(attributeType).Any();
         public bool Has<TAttribute>() where TAttribute : class => GetAll<TAttribute>().Any();
@@ -67,9 +67,9 @@ namespace BinaryFactor.Utilities
         public TAttribute[] GetAll<TAttribute>(bool inherit = false) where TAttribute : class => this.attributeProvider.GetCustomAttributes<TAttribute>(inherit);
         public dynamic[] GetAll(string attributeTypeName, bool inherit = false) => this.attributeProvider.GetCustomAttributes(attributeTypeName, inherit);
 
-        public Attribute GetOne(Type attributeType, bool inherit = false) => GetAll(attributeType, inherit).FirstOrDefault();
-        public TAttribute GetOne<TAttribute>(bool inherit = false) where TAttribute : class => GetAll<TAttribute>(inherit).FirstOrDefault();
-        public dynamic GetOne(string attributeTypeName, bool inherit = false) => GetAll(attributeTypeName, inherit).FirstOrDefault();
+        public Attribute Get(Type attributeType, bool inherit = false) => GetAll(attributeType, inherit).FirstOrDefault();
+        public TAttribute Get<TAttribute>(bool inherit = false) where TAttribute : class => GetAll<TAttribute>(inherit).FirstOrDefault();
+        public dynamic Get(string attributeTypeName, bool inherit = false) => GetAll(attributeTypeName, inherit).FirstOrDefault();
 
         public bool Has(Type attributeType, bool inherit = false) => GetAll(attributeType, inherit).Any();
         public bool Has<TAttribute>(bool inherit = false) where TAttribute : class => GetAll<TAttribute>(inherit).Any();
