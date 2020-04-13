@@ -13,22 +13,22 @@ namespace BinaryFactor.Tests
         public void ShouldCorrectlyRetrieveAttributes()
         {
             var type = typeof(DerivedClass);
-            type.GetAttributes().Has<CustomAttr>().ShouldBe(false);
-            type.GetAttributes().Has<CustomAttr>(inherit: true).ShouldBe(true);
-            type.GetAttributes().Has(typeof(CustomAttr).FullName, inherit: true).ShouldBe(true);
-            type.GetAttributes().GetAll(inherit: false).ShouldHaveSingleItem().ShouldBeOfType<CustomAttrForDerived>();
+            type.CustomAttrs().Has<CustomAttr>().ShouldBe(false);
+            type.CustomAttrs().Has<CustomAttr>(inherit: true).ShouldBe(true);
+            type.CustomAttrs().Has(typeof(CustomAttr).FullName, inherit: true).ShouldBe(true);
+            type.CustomAttrs().GetAll(inherit: false).ShouldHaveSingleItem().ShouldBeOfType<CustomAttrForDerived>();
 
             var method = type.GetMethod(nameof(DerivedClass.Method));
-            method.GetAttributes().Has<CustomAttr>().ShouldBe(false);
-            method.GetAttributes().Has<CustomAttr>(inherit: true).ShouldBe(true);
-            method.GetAttributes().Has(typeof(CustomAttr).FullName, inherit: true).ShouldBe(true);
-            method.GetAttributes().GetAll(inherit: false).ShouldHaveSingleItem().ShouldBeOfType<CustomAttrForDerived>();
+            method.CustomAttrs().Has<CustomAttr>().ShouldBe(false);
+            method.CustomAttrs().Has<CustomAttr>(inherit: true).ShouldBe(true);
+            method.CustomAttrs().Has(typeof(CustomAttr).FullName, inherit: true).ShouldBe(true);
+            method.CustomAttrs().GetAll(inherit: false).ShouldHaveSingleItem().ShouldBeOfType<CustomAttrForDerived>();
 
             var parameter = method.GetParameters().Single();
-            parameter.GetAttributes().Has<CustomAttr>().ShouldBe(false);
-            parameter.GetAttributes().Has<CustomAttr>(inherit: true).ShouldBe(true);
-            parameter.GetAttributes().Has(typeof(CustomAttr).FullName, inherit: true).ShouldBe(true);
-            parameter.GetAttributes().GetAll(inherit: false).ShouldHaveSingleItem().ShouldBeOfType<CustomAttrForDerived>();
+            parameter.CustomAttrs().Has<CustomAttr>().ShouldBe(false);
+            parameter.CustomAttrs().Has<CustomAttr>(inherit: true).ShouldBe(true);
+            parameter.CustomAttrs().Has(typeof(CustomAttr).FullName, inherit: true).ShouldBe(true);
+            parameter.CustomAttrs().GetAll(inherit: false).ShouldHaveSingleItem().ShouldBeOfType<CustomAttrForDerived>();
         }
 
         [CustomAttr]

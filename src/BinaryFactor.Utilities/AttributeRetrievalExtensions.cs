@@ -9,25 +9,25 @@ namespace BinaryFactor.Utilities
 
     public static class AttributeRetrievalExtensions
     {
-        public static CustomAttributeAccessor GetAttributes(this Assembly assembly) => new CustomAttributeAccessor(new AssemblyAttributeProvider(assembly));
-        public static CustomAttributeAccessor GetAttributes(this Module module) => new CustomAttributeAccessor(new ModuleAttributeProvider(module));
-        public static InheritedCustomAttributeAccessor GetAttributes(this ParameterInfo parameterInfo) => new InheritedCustomAttributeAccessor(new ParameterAttributeProvider(parameterInfo));
-        public static InheritedCustomAttributeAccessor GetAttributes(this MemberInfo memberInfo) => new InheritedCustomAttributeAccessor(new MemberAttributeProvider(memberInfo));
+        public static CustomAttributeAccessor CustomAttrs(this Assembly assembly) => new CustomAttributeAccessor(new AssemblyAttributeProvider(assembly));
+        public static CustomAttributeAccessor CustomAttrs(this Module module) => new CustomAttributeAccessor(new ModuleAttributeProvider(module));
+        public static InheritedCustomAttributeAccessor CustomAttrs(this ParameterInfo parameterInfo) => new InheritedCustomAttributeAccessor(new ParameterAttributeProvider(parameterInfo));
+        public static InheritedCustomAttributeAccessor CustomAttrs(this MemberInfo memberInfo) => new InheritedCustomAttributeAccessor(new MemberAttributeProvider(memberInfo));
 
-        public static InheritedCustomAttributeAccessor GetAttributes(this ICustomAttributeProvider customAttributeProvider)
+        public static InheritedCustomAttributeAccessor CustomAttrs(this ICustomAttributeProvider customAttributeProvider)
         {
             return customAttributeProvider switch
             {
                 Assembly assembly => new InheritedCustomAttributeAccessor(new AssemblyAttributeProvider(assembly)),
                 Module module => new InheritedCustomAttributeAccessor(new ModuleAttributeProvider(module)),
-                ParameterInfo parameterInfo => parameterInfo.GetAttributes(),
-                MemberInfo memberInfo => memberInfo.GetAttributes(),
+                ParameterInfo parameterInfo => parameterInfo.CustomAttrs(),
+                MemberInfo memberInfo => memberInfo.CustomAttrs(),
 
                 _ => throw new ArgumentException("Unsupported custom attribute provider type")
             };
         }
 
-        public static CustomAttributeAccessor GetAttributes(this Enum enumValue)
+        public static CustomAttributeAccessor CustomAttrs(this Enum enumValue)
         {
             var type = enumValue.GetType();
             var memberInfos = type.GetMember(enumValue.ToString());

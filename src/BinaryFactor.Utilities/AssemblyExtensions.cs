@@ -42,7 +42,7 @@ namespace BinaryFactor.Utilities
         {
             var bytes = GetEmbeddedResourceBytes(assembly, embeddedResource);
 
-            return Encoding.UTF8.GetString(bytes);
+            return Encoding.UTF8.GetStringWithoutPreamble(bytes);
         }
 
         private static byte[] GetEmbeddedResourceBytes(Assembly assembly, string embeddedResource)
