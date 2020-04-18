@@ -4,6 +4,7 @@
 namespace BinaryFactor.Utilities
 {
     using System;
+    using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
 
@@ -54,6 +55,10 @@ namespace BinaryFactor.Utilities
         public bool Has(Type attributeType) => GetAll(attributeType).Any();
         public bool Has<TAttribute>() where TAttribute : class => GetAll<TAttribute>().Any();
         public bool Has(string attributeTypeName) => GetAll(attributeTypeName).Any();
+
+        public bool Has(Type attributeType, out Attribute attribute) => GetAll(attributeType).AnyWithOut(out attribute);
+        public bool Has<TAttribute>(out TAttribute attribute) where TAttribute : class => GetAll<TAttribute>().AnyWithOut(out attribute);
+        public bool Has(string attributeTypeName, out dynamic attribute) => GetAll(attributeTypeName).AnyWithOut(out attribute);
     }
 
     public class InheritedCustomAttributeAccessor : CustomAttributeAccessor
@@ -74,6 +79,10 @@ namespace BinaryFactor.Utilities
         public bool Has(Type attributeType, bool inherit = false) => GetAll(attributeType, inherit).Any();
         public bool Has<TAttribute>(bool inherit = false) where TAttribute : class => GetAll<TAttribute>(inherit).Any();
         public bool Has(string attributeTypeName, bool inherit = false) => GetAll(attributeTypeName, inherit).Any();
+
+        public bool Has(Type attributeType, out Attribute attribute, bool inherit = false) => GetAll(attributeType, inherit).AnyWithOut(out attribute);
+        public bool Has<TAttribute>(out TAttribute attribute, bool inherit = false) where TAttribute : class => GetAll<TAttribute>(inherit).AnyWithOut(out attribute);
+        public bool Has(string attributeTypeName, out dynamic attribute, bool inherit = false) => GetAll(attributeTypeName, inherit).AnyWithOut(out attribute);
     }
 
     abstract class AttributeProvider
@@ -120,5 +129,14 @@ namespace BinaryFactor.Utilities
         public MemberAttributeProvider(MemberInfo member) => this.member = member;
 
         protected override Attribute[] DoGetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.member, inherit);
+    }
+
+    static class AnyWithOutParamEnumerableExtension
+    {
+        public static bool AnyWithOut<T>(this IEnumerable<T> enumerable, out T firstOrDefault)
+        {
+            firstOrDefault = enumerable.FirstOrDefault();
+            return enumerable.Any();
+        }
     }
 }
