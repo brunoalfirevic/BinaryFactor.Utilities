@@ -23,6 +23,12 @@ namespace BinaryFactor.Tests
             method.CustomAttrs().Has<CustomAttr>(inherit: true).ShouldBe(true);
             method.CustomAttrs().Has(typeof(CustomAttr).FullName, inherit: true).ShouldBe(true);
             method.CustomAttrs().GetAll(inherit: false).ShouldHaveSingleItem().ShouldBeOfType<CustomAttrForDerived>();
+            method.ReturnTypeCustomAttributes.CustomAttrs().Has<CustomAttr>().ShouldBeTrue();
+            method.ReturnParameter.CustomAttrs().Has<CustomAttr>().ShouldBeTrue();
+
+            var methodWithoutReturnAttributes = type.GetMethod(nameof(DerivedClass.MethodWithoutReturnAttributes));
+            methodWithoutReturnAttributes.ReturnTypeCustomAttributes.CustomAttrs().GetAll().ShouldBeEmpty();
+            methodWithoutReturnAttributes.ReturnParameter.CustomAttrs().GetAll().ShouldBeEmpty();
 
             var parameter = method.GetParameters().Single();
             parameter.CustomAttrs().Has<CustomAttr>().ShouldBe(false);
@@ -44,7 +50,12 @@ namespace BinaryFactor.Tests
         class DerivedClass: BaseClass
         {
             [CustomAttrForDerived]
+            [return: CustomAttr]
             public override void Method([CustomAttrForDerived] int i)
+            {
+            }
+
+            public void MethodWithoutReturnAttributes()
             {
             }
         }

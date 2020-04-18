@@ -78,11 +78,12 @@ namespace BinaryFactor.Utilities
 
     abstract class AttributeProvider
     {
-        public abstract Attribute[] GetCustomAttributes(bool inherit);
-
+        public Attribute[] GetCustomAttributes(bool inherit) => DoGetCustomAttributes(inherit) ?? new Attribute[0];
         public Attribute[] GetCustomAttributes(Type type, bool inherit) => GetCustomAttributes(inherit).Where(attr => attr.GetType().Is(type)).Cast<Attribute>().ToArray();
         public TAttribute[] GetCustomAttributes<TAttribute>(bool inherit) where TAttribute : class => GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>().ToArray();
         public dynamic[] GetCustomAttributes(string attributeTypeName, bool inherit) => GetCustomAttributes(inherit).Where(attr => attr.GetType().FullName == attributeTypeName).ToArray();
+
+        protected abstract Attribute[] DoGetCustomAttributes(bool inherit);
     }
 
     class ParameterAttributeProvider : AttributeProvider
@@ -91,7 +92,7 @@ namespace BinaryFactor.Utilities
 
         public ParameterAttributeProvider(ParameterInfo parameter) => this.parameter = parameter;
 
-        public override Attribute[] GetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.parameter, inherit);
+        protected override Attribute[] DoGetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.parameter, inherit);
     }
 
     class AssemblyAttributeProvider : AttributeProvider
@@ -100,7 +101,7 @@ namespace BinaryFactor.Utilities
 
         public AssemblyAttributeProvider(Assembly assembly) => this.assembly = assembly;
 
-        public override Attribute[] GetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.assembly, inherit);
+        protected override Attribute[] DoGetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.assembly, inherit);
     }
 
     class ModuleAttributeProvider : AttributeProvider
@@ -109,7 +110,7 @@ namespace BinaryFactor.Utilities
 
         public ModuleAttributeProvider(Module module) => this.module = module;
 
-        public override Attribute[] GetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.module, inherit);
+        protected override Attribute[] DoGetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.module, inherit);
     }
 
     class MemberAttributeProvider : AttributeProvider
@@ -118,6 +119,6 @@ namespace BinaryFactor.Utilities
 
         public MemberAttributeProvider(MemberInfo member) => this.member = member;
 
-        public override Attribute[] GetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.member, inherit);
+        protected override Attribute[] DoGetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.member, inherit);
     }
 }
