@@ -59,6 +59,15 @@ namespace BinaryFactor.Utilities
         public bool Has(Type attributeType, out Attribute attribute) => GetAll(attributeType).AnyWithOut(out attribute);
         public bool Has<TAttribute>(out TAttribute attribute) where TAttribute : class => GetAll<TAttribute>().AnyWithOut(out attribute);
         public bool Has(string attributeTypeName, out dynamic attribute) => GetAll(attributeTypeName).AnyWithOut(out attribute);
+
+        public CustomAttributeData[] GetAllData() => this.attributeProvider.GetCustomAttributesData();
+        public CustomAttributeData[] GetAllData(Type attributeType) => this.attributeProvider.GetCustomAttributesData(attributeType);
+        public CustomAttributeData[] GetAllData<TAttribute>() where TAttribute : class => this.attributeProvider.GetCustomAttributesData<TAttribute>();
+        public CustomAttributeData[] GetAllData(string attributeTypeName) => this.attributeProvider.GetCustomAttributesData(attributeTypeName);
+
+        public CustomAttributeData GetData(Type attributeType) => GetAllData(attributeType).FirstOrDefault();
+        public CustomAttributeData GetData<TAttribute>() where TAttribute : class => GetAllData<TAttribute>().FirstOrDefault();
+        public CustomAttributeData GetData(string attributeTypeName) => GetAllData(attributeTypeName).FirstOrDefault();
     }
 
     public class InheritedCustomAttributeAccessor : CustomAttributeAccessor
@@ -92,7 +101,13 @@ namespace BinaryFactor.Utilities
         public TAttribute[] GetCustomAttributes<TAttribute>(bool inherit) where TAttribute : class => GetCustomAttributes(typeof(TAttribute), inherit).Cast<TAttribute>().ToArray();
         public dynamic[] GetCustomAttributes(string attributeTypeName, bool inherit) => GetCustomAttributes(inherit).Where(attr => attr.GetType().FullName == attributeTypeName).ToArray();
 
+        public CustomAttributeData[] GetCustomAttributesData() => DoGetCustomAttributesData()?.ToArray() ?? new CustomAttributeData[0];
+        public CustomAttributeData[] GetCustomAttributesData(Type type) => GetCustomAttributesData().Where(attrData => attrData.AttributeType.Is(type)).ToArray();
+        public CustomAttributeData[] GetCustomAttributesData<TAttribute>() => GetCustomAttributesData().Where(attrData => attrData.AttributeType.Is<TAttribute>()).ToArray();
+        public CustomAttributeData[] GetCustomAttributesData(string attributeTypeName) => GetCustomAttributesData().Where(attrData => attrData.AttributeType.FullName == attributeTypeName).ToArray();
+
         protected abstract Attribute[] DoGetCustomAttributes(bool inherit);
+        protected abstract IList<CustomAttributeData> DoGetCustomAttributesData();
     }
 
     class ParameterAttributeProvider : AttributeProvider
@@ -102,6 +117,8 @@ namespace BinaryFactor.Utilities
         public ParameterAttributeProvider(ParameterInfo parameter) => this.parameter = parameter;
 
         protected override Attribute[] DoGetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.parameter, inherit);
+
+        protected override IList<CustomAttributeData> DoGetCustomAttributesData() => this.parameter.GetCustomAttributesData();
     }
 
     class AssemblyAttributeProvider : AttributeProvider
@@ -111,6 +128,8 @@ namespace BinaryFactor.Utilities
         public AssemblyAttributeProvider(Assembly assembly) => this.assembly = assembly;
 
         protected override Attribute[] DoGetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.assembly, inherit);
+
+        protected override IList<CustomAttributeData> DoGetCustomAttributesData() => this.assembly.GetCustomAttributesData();
     }
 
     class ModuleAttributeProvider : AttributeProvider
@@ -120,6 +139,8 @@ namespace BinaryFactor.Utilities
         public ModuleAttributeProvider(Module module) => this.module = module;
 
         protected override Attribute[] DoGetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.module, inherit);
+
+        protected override IList<CustomAttributeData> DoGetCustomAttributesData() => this.module.GetCustomAttributesData();
     }
 
     class MemberAttributeProvider : AttributeProvider
@@ -129,6 +150,8 @@ namespace BinaryFactor.Utilities
         public MemberAttributeProvider(MemberInfo member) => this.member = member;
 
         protected override Attribute[] DoGetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.member, inherit);
+
+        protected override IList<CustomAttributeData> DoGetCustomAttributesData() => this.member.GetCustomAttributesData();
     }
 
     static class AnyWithOutParamEnumerableExtension
