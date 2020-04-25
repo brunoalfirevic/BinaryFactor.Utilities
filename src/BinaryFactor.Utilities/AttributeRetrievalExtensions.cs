@@ -24,7 +24,7 @@ namespace BinaryFactor.Utilities
                 ParameterInfo parameterInfo => parameterInfo.CustomAttrs(),
                 MemberInfo memberInfo => memberInfo.CustomAttrs(),
 
-                _ => throw new ArgumentException("Unsupported custom attribute provider type")
+                _ => new InheritedCustomAttributeAccessor(new FallbackAttributeProvider(customAttributeProvider))
             };
         }
 
@@ -152,6 +152,17 @@ namespace BinaryFactor.Utilities
         protected override Attribute[] DoGetCustomAttributes(bool inherit) => Attribute.GetCustomAttributes(this.member, inherit);
 
         protected override IList<CustomAttributeData> DoGetCustomAttributesData() => this.member.GetCustomAttributesData();
+    }
+
+    class FallbackAttributeProvider : AttributeProvider
+    {
+        private readonly ICustomAttributeProvider customAttributeProvider;
+
+        public FallbackAttributeProvider(ICustomAttributeProvider customAttributeProvider) => this.customAttributeProvider = customAttributeProvider;
+
+        protected override Attribute[] DoGetCustomAttributes(bool inherit) => this.customAttributeProvider.GetCustomAttributes(inherit).Cast<Attribute>().ToArray();
+
+        protected override IList<CustomAttributeData> DoGetCustomAttributesData() => throw new NotSupportedException("Getting custom attribute data is only supported for Assembly, Module, MemberInfo and ParameterInfo custom attribute providers");
     }
 
     static class AnyWithOutParamEnumerableExtension
