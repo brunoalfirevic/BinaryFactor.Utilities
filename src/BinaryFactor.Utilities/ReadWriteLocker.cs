@@ -46,86 +46,76 @@ namespace BinaryFactor.Utilities
                 : new ReaderWriterLockSlim(recursionPolicy.Value);
         }
 
-        public DiposableLock EnterReadLock()
+        public DisposableLock EnterReadLock() => DoEnterReadLock(this.defaultTimeout);
+
+        public DisposableLock EnterReadLock(int millisecondsTimeout) => DoEnterReadLock(TimeSpan.FromMilliseconds(millisecondsTimeout));
+
+        public DisposableLock EnterReadLock(TimeSpan timeout) => DoEnterReadLock(timeout);
+
+        public DisposableLock EnterUpgradeableReadLock() => DoEnterUpgradeableReadLock(this.defaultTimeout);
+
+        public DisposableLock EnterUpgradeableReadLock(int millisecondsTimeout) => DoEnterUpgradeableReadLock(TimeSpan.FromMilliseconds(millisecondsTimeout));
+
+        public DisposableLock EnterUpgradeableReadLock(TimeSpan timeout) => DoEnterUpgradeableReadLock(timeout);
+
+        public DisposableLock EnterWriteLock() => DoEnterWriteLock(this.defaultTimeout);
+
+        public DisposableLock EnterWriteLock(int millisecondsTimeout) => DoEnterWriteLock(TimeSpan.FromMilliseconds(millisecondsTimeout));
+
+        public DisposableLock EnterWriteLock(TimeSpan timeout) => DoEnterWriteLock(timeout);
+
+        private DisposableLock DoEnterReadLock(TimeSpan? timeout)
         {
             if (this.defaultTimeout == null)
             {
                 this.locker.EnterReadLock();
-                return new DiposableLock(this.locker, LockType.Read);
             }
             else
             {
-                return EnterReadLock(this.defaultTimeout.Value);
+                if (!this.locker.TryEnterReadLock(timeout.Value))
+                    throw new LockTimeoutException();
             }
+
+            return new DisposableLock(this.locker, LockType.Read);
         }
 
-        public DiposableLock EnterReadLock(int millisecondsTimeout)
-        {
-            return EnterReadLock(TimeSpan.FromMilliseconds(millisecondsTimeout));
-        }
-
-        public DiposableLock EnterReadLock(TimeSpan timeout)
-        {
-            return this.locker.TryEnterReadLock(timeout)
-                ? new DiposableLock(this.locker, LockType.Read)
-                : throw new LockTimeoutException();
-        }
-
-        public DiposableLock EnterUpgradeableReadLock()
+        private DisposableLock DoEnterUpgradeableReadLock(TimeSpan? timeout)
         {
             if (this.defaultTimeout == null)
             {
                 this.locker.EnterUpgradeableReadLock();
-                return new DiposableLock(this.locker, LockType.UpgradeableRead);
             }
             else
             {
-                return EnterUpgradeableReadLock(this.defaultTimeout.Value);
+                if (!this.locker.TryEnterUpgradeableReadLock(timeout.Value))
+                    throw new LockTimeoutException();
             }
+
+            return new DisposableLock(this.locker, LockType.UpgradeableRead);
         }
 
-        public DiposableLock EnterUpgradeableReadLock(int millisecondsTimeout)
-        {
-            return EnterUpgradeableReadLock(TimeSpan.FromMilliseconds(millisecondsTimeout));
-        }
-
-        public DiposableLock EnterUpgradeableReadLock(TimeSpan timeout)
-        {
-            return this.locker.TryEnterUpgradeableReadLock(timeout)
-                ? new DiposableLock(this.locker, LockType.UpgradeableRead)
-                : throw new LockTimeoutException();
-        }
-
-        public DiposableLock EnterWriteLock()
+        private DisposableLock DoEnterWriteLock(TimeSpan? timeout)
         {
             if (this.defaultTimeout == null)
             {
                 this.locker.EnterWriteLock();
-                return new DiposableLock(this.locker, LockType.Write);
             }
             else
             {
-                return EnterWriteLock(this.defaultTimeout.Value);
+                if (!this.locker.TryEnterWriteLock(timeout.Value))
+                    throw new LockTimeoutException();
             }
+
+            return new DisposableLock(this.locker, LockType.Write);
         }
 
-        public DiposableLock EnterWriteLock(int millisecondsTimeout)
-        {
-            return EnterWriteLock(TimeSpan.FromMilliseconds(millisecondsTimeout));
-        }
-
-        public DiposableLock EnterWriteLock(TimeSpan timeout)
-        {
-            return this.locker.TryEnterWriteLock(timeout)
-                ? new DiposableLock(this.locker, LockType.Write)
-                : throw new LockTimeoutException();
-        }
-
-        public class DiposableLock : IDisposable
+        public class DisposableLock : IDisposable
         {
             private readonly ReaderWriterLockSlim readerWriterLock;
+            
+            private bool hasBeenDisposed;
 
-            public DiposableLock(ReaderWriterLockSlim readerWriterLock, LockType lockType)
+            public DisposableLock(ReaderWriterLockSlim readerWriterLock, LockType lockType)
             {
                 this.readerWriterLock = readerWriterLock;
                 LockType = lockType;
@@ -135,6 +125,9 @@ namespace BinaryFactor.Utilities
 
             void IDisposable.Dispose()
             {
+                if (this.hasBeenDisposed)
+                    throw new ObjectDisposedException(nameof(DisposableLock));
+
                 switch (LockType)
                 {
                     case LockType.Read:
@@ -149,6 +142,8 @@ namespace BinaryFactor.Utilities
                         this.readerWriterLock.ExitWriteLock();
                         break;
                 }
+
+                this.hasBeenDisposed = true;
             }
         }
     }
