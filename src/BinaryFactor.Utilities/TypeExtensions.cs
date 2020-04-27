@@ -80,7 +80,7 @@ namespace BinaryFactor.Utilities
                 return typeof(void);
 
             if (type.IsAssignableToGenericType(typeof(Task<>)))
-                return type.GetGenericArguments(typeof(Task<>)).Single();
+                return type.ExtractGenericArguments(typeof(Task<>)).Single();
 
             return type;
         }
@@ -102,7 +102,7 @@ namespace BinaryFactor.Utilities
 
         public static Type GetEnumerableItemType(this Type enumerableType)
         {
-            return enumerableType.GetGenericArguments(typeof(IEnumerable<>)).Single();
+            return enumerableType.ExtractGenericArguments(typeof(IEnumerable<>)).Single();
         }
 
         public static bool IsAssignableToGenericType(this Type type, Type genericType)
@@ -118,7 +118,7 @@ namespace BinaryFactor.Utilities
             return baseType != null && IsAssignableToGenericType(baseType, genericType);
         }
 
-        public static IList<Type> GetGenericArguments(this Type type, Type genericTypeDefinition)
+        public static IList<Type> ExtractGenericArguments(this Type type, Type genericTypeDefinition)
         {
             if (genericTypeDefinition.IsInterface)
             {
