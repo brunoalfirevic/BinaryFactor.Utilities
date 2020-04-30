@@ -1,9 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿// Copyright (c) Bruno Alfirević. All rights reserved.
+// Licensed under the MIT license. See license.txt in the project root for license information.
 
 namespace BinaryFactor.Utilities
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Linq;
+
     public abstract class StructurallyEquatable<T> : StructurallyEquatable, IEquatable<T>
         where T: StructurallyEquatable
     {

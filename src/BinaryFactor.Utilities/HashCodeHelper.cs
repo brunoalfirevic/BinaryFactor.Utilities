@@ -1,8 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿// Copyright (c) Bruno Alfirević. All rights reserved.
+// Licensed under the MIT license. See license.txt in the project root for license information.
 
 namespace BinaryFactor.Utilities
 {
+    using System;
+    using System.Collections.Generic;
+
     public static class HashCodeHelper
     {
         public static int Combine<T>(IEnumerable<T> values)
