@@ -4,6 +4,8 @@
 
 . .\go-helpers
 
+$project_name = "Utilities"
+
 function clean {
     info "Cleaning build artifacts"
     exec {dotnet clean src -v minimal /nologo}
@@ -21,11 +23,11 @@ function rebuild {
 
 function test {
     info "Running tests using .NET Core"
-    exec {dotnet run --project src/BinaryFactor.Utilities.Tests}
+    exec {dotnet run --project src/BinaryFactor.$project_name.Tests}
 }
 
 function watch-test {
-    exec {dotnet watch --project src/BinaryFactor.Utilities.Tests run}
+    exec {dotnet watch --project src/BinaryFactor.$project_name.Tests run}
 }
 
 function pack-nuget {
@@ -46,7 +48,7 @@ function push-to-nuget {
 
 function unlist-from-nuget {
     info "Unlisting NuGet package"
-    exec {dotnet nuget delete BinaryFactor.Utilities $($arguments[0]) --non-interactive --source nuget.org}
+    exec {dotnet nuget delete BinaryFactor.$project_name $($arguments[0]) --non-interactive --source nuget.org}
 }
 
 function go {
