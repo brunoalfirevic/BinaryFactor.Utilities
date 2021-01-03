@@ -10,6 +10,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5F3AB62E-A1FB-4645-94CA-9D9FCB02FAB9}"
 	ProjectSection(SolutionItems) = preProject
 		..\.gitignore = ..\.gitignore
+		..\global.json = ..\global.json
 		..\go-helpers.ps1 = ..\go-helpers.ps1
 		..\go.bat = ..\go.bat
 		..\go.ps1 = ..\go.ps1
