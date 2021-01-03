@@ -44,36 +44,6 @@ namespace BinaryFactor.Utilities
         {
             return default;
         }
-
-        public static T? GetValueOrNull<T>(this Optional<T> optional)
-            where T : struct
-        {
-            return optional.HasValue ? optional.Value : null;
-        }
-
-        public static T? GetValueOrDefault<T>(this Optional<T> optional, T? defaultValue)
-          where T : struct
-        {
-            return optional.HasValue ? optional.Value : defaultValue;
-        }
-
-        public static T? GetValueOrInvoke<T>(this Optional<T> optional, Func<T?> defaultValueGetter)
-            where T : struct
-        {
-            return optional.HasValue ? optional.Value : defaultValueGetter();
-        }
-
-        public static Optional<T> Or<T>(this Optional<T> optional, T? other)
-            where T : struct
-        {
-            return optional.HasValue ? optional: Of(other);
-        }
-
-        public static Optional<T> OrInvoke<T>(this Optional<T> optional, Func<T?> otherGetter)
-           where T : struct
-        {
-            return optional.HasValue ? optional : Of(otherGetter());
-        }
     }
 
     [DebuggerDisplay("{" + nameof(ToString) + "(),nq}")]
@@ -231,6 +201,39 @@ namespace BinaryFactor.Utilities
                 throw new ArgumentNullException(nameof(resultSelector));
 
             return SelectMany(value => otherSelector(value).Select(other => resultSelector(value, other)));
+        }
+    }
+
+    public static class OptionalExtensions
+    {
+        public static T? GetValueOrNull<T>(this Optional<T> optional)
+            where T : struct
+        {
+            return optional.HasValue ? optional.Value : null;
+        }
+
+        public static T? GetValueOrDefault<T>(this Optional<T> optional, T? defaultValue)
+          where T : struct
+        {
+            return optional.HasValue ? optional.Value : defaultValue;
+        }
+
+        public static T? GetValueOrInvoke<T>(this Optional<T> optional, Func<T?> defaultValueGetter)
+            where T : struct
+        {
+            return optional.HasValue ? optional.Value : defaultValueGetter();
+        }
+
+        public static Optional<T> Or<T>(this Optional<T> optional, T? other)
+            where T : struct
+        {
+            return optional.HasValue ? optional : Optional.Of(other);
+        }
+
+        public static Optional<T> OrInvoke<T>(this Optional<T> optional, Func<T?> otherGetter)
+           where T : struct
+        {
+            return optional.HasValue ? optional : Optional.Of(otherGetter());
         }
     }
 

@@ -27,48 +27,6 @@ namespace BinaryFactor.Utilities
         {
             return default;
         }
-
-        public static T? GetValueOrNull<T>(this OptionalNullable<T> optional)
-            where T : struct
-        {
-            return optional.HasValue ? optional.Value : null;
-        }
-
-        public static T? GetValueOrDefault<T>(this OptionalNullable<T> optional, T? defaultValue)
-            where T : struct
-        {
-            return optional.HasValue ? optional.Value : defaultValue;
-        }
-
-        public static T? GetValueOrInvoke<T>(this OptionalNullable<T> optional, Func<T?> defaultValueGetter)
-            where T : struct
-        {
-            return optional.HasValue ? optional.Value : defaultValueGetter();
-        }
-
-        public static OptionalNullable<T?> Or<T>(this OptionalNullable<T> optional, OptionalNullable<T?> other)
-            where T : struct
-        {
-            return optional.HasValue ? Of<T?>(optional.Value) : other;
-        }
-
-        public static OptionalNullable<T?> Or<T>(this OptionalNullable<T> optional, T? other)
-            where T : struct
-        {
-            return optional.HasValue ? Of<T?>(optional.Value) : Of(other);
-        }
-
-        public static OptionalNullable<T?> OrInvoke<T>(this OptionalNullable<T> optional, Func<OptionalNullable<T?>> otherGetter)
-            where T : struct
-        {
-            return optional.HasValue ? Of<T?>(optional.Value) : otherGetter();
-        }
-
-        public static OptionalNullable<T?> OrInvoke<T>(this OptionalNullable<T> optional, Func<T?> otherGetter)
-            where T : struct
-        {
-            return optional.HasValue ? Of<T?>(optional.Value) : Of(otherGetter());
-        }
     }
 
     [DebuggerDisplay("{" + nameof(ToString) + "(),nq}")]
@@ -198,6 +156,51 @@ namespace BinaryFactor.Utilities
                 throw new ArgumentNullException(nameof(predicate));
 
             return HasValue && predicate(this.value) ? this : OptionalNullable.Empty<T>();
+        }
+    }
+
+    public static class OptionalNullableExtensions
+    {
+        public static T? GetValueOrNull<T>(this OptionalNullable<T> optional)
+            where T : struct
+        {
+            return optional.HasValue ? optional.Value : null;
+        }
+
+        public static T? GetValueOrDefault<T>(this OptionalNullable<T> optional, T? defaultValue)
+            where T : struct
+        {
+            return optional.HasValue ? optional.Value : defaultValue;
+        }
+
+        public static T? GetValueOrInvoke<T>(this OptionalNullable<T> optional, Func<T?> defaultValueGetter)
+            where T : struct
+        {
+            return optional.HasValue ? optional.Value : defaultValueGetter();
+        }
+
+        public static OptionalNullable<T?> Or<T>(this OptionalNullable<T> optional, OptionalNullable<T?> other)
+            where T : struct
+        {
+            return optional.HasValue ? OptionalNullable.Of<T?>(optional.Value) : other;
+        }
+
+        public static OptionalNullable<T?> Or<T>(this OptionalNullable<T> optional, T? other)
+            where T : struct
+        {
+            return optional.HasValue ? OptionalNullable.Of<T?>(optional.Value) : OptionalNullable.Of(other);
+        }
+
+        public static OptionalNullable<T?> OrInvoke<T>(this OptionalNullable<T> optional, Func<OptionalNullable<T?>> otherGetter)
+            where T : struct
+        {
+            return optional.HasValue ? OptionalNullable.Of<T?>(optional.Value) : otherGetter();
+        }
+
+        public static OptionalNullable<T?> OrInvoke<T>(this OptionalNullable<T> optional, Func<T?> otherGetter)
+            where T : struct
+        {
+            return optional.HasValue ? OptionalNullable.Of<T?>(optional.Value) : OptionalNullable.Of(otherGetter());
         }
     }
 }
