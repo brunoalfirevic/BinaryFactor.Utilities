@@ -72,5 +72,12 @@ namespace BinaryFactor.Utilities
         {
             return string.IsNullOrWhiteSpace(str) ? null : str;
         }
+
+        public static string Reverse(this string str)
+        {
+            var charArray = str.ToCharArray();
+            Array.Reverse(charArray);
+            return new string(charArray);
+        }
     }
 }

@@ -4,10 +4,124 @@
 namespace BinaryFactor.Utilities
 {
     using System;
+    using System.Linq;
     using System.Numerics;
+    using System.Text;
 
     public static class ConvertEx
     {
+        public static string ToCustomAlphabetString(BigInteger value, string alphabet)
+        {
+            var result = new StringBuilder();
+
+            do
+            {
+                value = BigInteger.DivRem(value, alphabet.Length, out var remainder);
+                result.Append(alphabet[(int)remainder]);
+            } while (value > 0);
+
+            return result.ToString().Reverse();
+        }
+
+        public static string ToCustomAlphabetString(byte[] value, string alphabet, bool isBigEndian = false)
+        {
+            if (isBigEndian)
+            {
+                value = value.ToArray();
+                Array.Reverse(value);
+            }
+
+            var trailingBytesWithZeroValue = 0;
+            for (var i = value.Length - 1; i >= 0; i--)
+            {
+                if (value[i] != 0)
+                    break;
+
+                trailingBytesWithZeroValue++;
+            }
+
+            var leadingZeros = new string(alphabet[0], trailingBytesWithZeroValue);
+            if (value.Length == trailingBytesWithZeroValue)
+                return leadingZeros;
+
+            var bytesWithSingleTrailingZero = value.Take(value.Length - trailingBytesWithZeroValue).Append((byte) 0).ToArray();
+            return leadingZeros + ToCustomAlphabetString(new BigInteger(bytesWithSingleTrailingZero), alphabet);
+        }
+
+        public static string ToCustomAlphabetString(Guid value, string alphabet, bool isBigEndian = false)
+        {
+            return ToCustomAlphabetString(FromGuidToBigInteger(value, isBigEndian), alphabet);
+        }
+
+        public static BigInteger FromCustomAlphabetString(string value, string alphabet)
+        {
+            var alphabetDict = alphabet.ToDictionary((c, index) => c, (c, index) => index);
+
+            var result = BigInteger.Zero;
+            foreach (var c in value)
+                result = result * alphabet.Length + alphabetDict[c];
+
+            return result;
+        }
+
+        public static byte[] FromCustomAlphabetStringToBytes(string value, string alphabet, bool isBigEndian = false)
+        {
+            var leadingZeros = 0;
+            for (var i = 0; i < value.Length; i++)
+            {
+                if (value[i] != alphabet[0])
+                    break;
+
+                leadingZeros++;
+            }
+
+            var bytesForLeadingZeros = new byte[leadingZeros];
+            if (leadingZeros == value.Length)
+                return bytesForLeadingZeros;
+
+            var convertedBytes = FromCustomAlphabetString(value, alphabet).ToByteArray();
+
+            if (isBigEndian)
+                Array.Reverse(convertedBytes);
+
+            return isBigEndian
+                ? bytesForLeadingZeros.Concat(convertedBytes).ToArray()
+                : convertedBytes.Concat(bytesForLeadingZeros).ToArray();
+        }
+
+        public static Guid FromCustomAlphabetStringToGuid(string value, string alphabet, bool isBigEndian = false)
+        {
+            return FromBigIntegerToGuid(FromCustomAlphabetString(value, alphabet), isBigEndian);
+        }
+
+        public static Guid FromBigIntegerToGuid(BigInteger value, bool isBigEndian = false)
+        {
+            var guidBytes = new byte[16];
+            var bigIntegerBytes = value.ToByteArray().SkipLastWhile(b => b == 0).ToArray();
+
+            if (bigIntegerBytes.Length > guidBytes.Length)
+                throw new ArgumentException("Value is too large to be converted to GUID", nameof(value));
+
+            bigIntegerBytes.CopyTo(guidBytes, 0);
+
+            if (isBigEndian)
+                Array.Reverse(guidBytes);
+
+            return GuidUtilities.CreateFromVariant1ByteArray(guidBytes);
+        }
+
+        public static BigInteger FromGuidToBigInteger(Guid value, bool isBigEndian = false)
+        {
+            var guidBytes = value.ToVariant1ByteArray();
+
+            if (isBigEndian)
+                Array.Reverse(guidBytes);
+
+            var bytesWithExtraZeroToForcePositiveBigInteger = new byte[guidBytes.Length + 1];
+            guidBytes.CopyTo(bytesWithExtraZeroToForcePositiveBigInteger, 0);
+            return new BigInteger(bytesWithExtraZeroToForcePositiveBigInteger);
+        }
+
         public static T ChangeType<T>(object value, IFormatProvider formatProvider = null, bool convertDbNullToNull = false)
         {
             return (T) ChangeType(value, typeof(T), formatProvider, convertDbNullToNull);
@@ -76,6 +190,30 @@ namespace BinaryFactor.Utilities
                     return ConvertBigIntToNumber(bigInt, targetType);
             }
 
+            if (targetType == typeof(Guid))
+            {
+                if (value is string s)
+                    return Guid.Parse(s);
+
+                if (value is byte[] byteArray)
+                    return new Guid(byteArray);
+
+                if (value is BigInteger bigInteger)
+                    return FromBigIntegerToGuid(bigInteger);
+            }
+
+            if (value is Guid guid)
+            {
+                if (targetType == typeof(string))
+                    return guid.ToString();
+
+                if (targetType == typeof(byte[]))
+                    return guid.ToByteArray();
+
+                if (targetType == typeof(BigInteger))
+                    return FromGuidToBigInteger(guid);
+            }
+
             return Convert.ChangeType(value, targetType, formatProvider);
         }
 
@@ -137,6 +275,13 @@ namespace BinaryFactor.Utilities
 
                 _ => throw new ArgumentException(),
             };
+        }
+
+        private static void Swap(ref byte left, ref byte right)
+        {
+            var tmp = left;
+            left = right;
+            right = tmp;
         }
     }
 }

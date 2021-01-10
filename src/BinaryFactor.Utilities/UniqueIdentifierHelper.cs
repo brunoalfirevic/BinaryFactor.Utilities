@@ -7,6 +7,6 @@ namespace BinaryFactor.Utilities
 
     public static class UniqueIdentifierHelper
     {
-        public static string Generate(string prefix = null) => Guid.NewGuid().ToValidIdentifierString(prefix);
+        public static string Generate(string prefix = null, bool caseSensitive = false) => Guid.NewGuid().ToValidIdentifierString(prefix, caseSensitive);
     }
 }
