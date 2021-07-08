@@ -22,30 +22,6 @@ namespace BinaryFactor.Utilities
         }
 
 #if NETSTANDARD2_0
-        public static IEnumerable<T> Prepend<T>(this IEnumerable<T> source, T element)
-#else
-        public static IEnumerable<T> Prepend<T>(IEnumerable<T> source, T element)
-#endif
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return new[] { element }.Concat(source);
-        }
-
-#if NETSTANDARD2_0
-        public static IEnumerable<T> Append<T>(this IEnumerable<T> source, T element)
-#else
-        public static IEnumerable<T> Append<T>(IEnumerable<T> source, T element)
-#endif
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Concat(new[] { element });
-        }
-
-#if NETSTANDARD2_0
         public static IEnumerable<T> SkipLast<T>(this IEnumerable<T> source, int count)
 #else
         public static IEnumerable<T> SkipLast<T>(IEnumerable<T> source, int count)
