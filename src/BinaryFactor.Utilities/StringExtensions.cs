@@ -82,7 +82,6 @@ namespace BinaryFactor.Utilities
 
         public static string RemoveCommonIndentation(this string str, int tabWidth = 4, string ambientIndentation = "")
         {
-
             static int CalculateBaselineIndentationLength(IList<string> lines, int tabWidth, bool removedEmptyFirstLine)
             {
                 if (removedEmptyFirstLine)
@@ -152,13 +151,9 @@ namespace BinaryFactor.Utilities
             if (stringLines.Length == 1)
                 return stringLines[0];
 
-            var removedEmptyFirstLine = false;
-            var firstIndex = 0;
-            if (string.IsNullOrWhiteSpace(stringLines[0]))
-            {
-                removedEmptyFirstLine = true;
-                firstIndex = 1;
-            }
+            (var removedEmptyFirstLine, var firstIndex) = string.IsNullOrWhiteSpace(stringLines[0])
+                ? (true, 1)
+                : (false, 0);
 
             var baselineIndentationLength = CalculateBaselineIndentationLength(stringLines, tabWidth, removedEmptyFirstLine);
 
